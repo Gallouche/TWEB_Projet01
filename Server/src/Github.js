@@ -35,13 +35,16 @@ class Github {
           if (!res.ok) {
             throw new ResponseError(res, data);
           }
-
           return data;
         }));
   }
 
-  getRepo(repoName) {
-    return this.request(`/${repoName}`);
+  getRepo(username, repoName) {
+    return this.request(`/repos/${username}/${repoName}`);
+  }
+
+  getUser(username) {
+    return this.request(`/users/${username}`);
   }
 }
 

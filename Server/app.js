@@ -7,6 +7,7 @@ const Github = require('./src/Github');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
 const client = new Github({ token: process.env.OAUTH_TOKEN });
 
 // Enable CORS for the client app
@@ -16,9 +17,15 @@ app.get('/', (req, res, next) => {
   res.send({ message: 'hi there' });
 });
 
-app.get('/:repo', (req, res, next) => { // eslint-disable-line no-unused-vars
-  client.getRepo(req.params.repo)
-    .then(repo => res.send(repo))
+app.get('/user/:username', (req, res, next) => {
+  client.getUser(req.params.username)
+    .then(username => res.send(username))
+    .catch(next);
+});
+
+app.get('/repo/:username/:repoName', (req, res, next) => {
+  client.getRepo(req.params.username, req.params.repoName)
+    .then(repoName => res.send(repoName))
     .catch(next);
 });
 
