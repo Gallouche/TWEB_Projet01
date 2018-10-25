@@ -1,4 +1,6 @@
 const fetch = require('node-fetch');
+const parse = require('parse-link-header');
+
 
 class ResponseError extends Error {
   constructor(res, body) {
@@ -10,7 +12,10 @@ class ResponseError extends Error {
 }
 
 class Github {
-  constructor({ token, baseUrl = 'https://api.github.com' } = {}) {
+  constructor({
+    token,
+    baseUrl = 'https://api.github.com'
+  } = {}) {
     this.token = token;
     this.baseUrl = baseUrl;
   }
@@ -20,7 +25,8 @@ class Github {
   }
 
   request(path, opts = {}) {
-    const url = `${this.baseUrl}${path}`;
+    const url = path;
+    //const url = `${this.baseUrl}${path}`;
     const options = {
       ...opts,
       headers: {
@@ -35,8 +41,37 @@ class Github {
           if (!res.ok) {
             throw new ResponseError(res, data);
           }
-          return data;
+          return Promise.resolve(res);
         }));
+  }
+
+  requestAllPages() {
+    const url = 'https://api.github.com/repos/openfaas/faas/contributors?per_page=20';
+
+    let result = []
+
+    let fetchPage = (url) => {
+      this.request(url).then(res => {
+        let data = res.json()
+        if (!res.ok) {
+          throw new ResponseError(res, data);
+        }
+        result.concat(data);
+
+        if (!res.headers.get('link')) {
+          return null;
+        }
+        
+        let parsedLink = parse(res.headers.get('link'));
+
+        if(parsedLink.next) {
+          console.log(parsedLink.next.url);
+          fetchPage(parsedLink.next.url);
+        }
+      })
+    }
+    fetchPage(url)
+    return result;
   }
 
   getRepo(username, repoName) {
@@ -45,6 +80,10 @@ class Github {
 
   getUser(username) {
     return this.request(`/users/${username}`);
+  }
+
+  getRepoContributors(username, repoName) {
+    return this.request(`/repos/${username}/${repoName}/contributors`);
   }
 }
 
