@@ -3,6 +3,9 @@ const fetch = require('node-fetch');
 function spreadArrays(arrays) {
   let result = [];
 
+  if(arrays.length === 1){
+    return Promise.resolve(arrays);
+  }
   arrays.forEach((array) => {
     result = [...result, ...array];
   });
@@ -50,6 +53,35 @@ function getCountryCodes(locations) {
     });
 }
 
+function checkIfDataIsInDb(repoName) {
+  return new Promise((resolve, reject) => {
+    fs.readFile('data.json', 'utf8', function readFileCallback(err, data){
+      if (err){
+          reject(err);
+      } else {
+        let obj = JSON.parse(data); //now it's an object
+        resolve(obj[repoName]);
+      }
+    });
+  })
+}
+
+function saveDataInDb(dataInfo) {
+  return new Promise((resolve, reject) => {
+    fs.readFile('data.json', 'utf8', function readFileCallback(err, data){
+      if (err){
+          reject(err);
+      } else {
+        obj = JSON.parse(data); //now it an object
+        obj[dataInfo.repo] = dataInfo.data // get repo key
+        json = JSON.stringify(obj); //convert it back to json
+        fs.writeFile('data.json', json, 'utf8', function writeFileCallback() {
+          resolve(dataInfo.data);
+        }); // write it back 
+    }});
+  })
+}
+
 module.exports = {
-  spreadArrays, getUrls, getLocations, parseResponse, getCountryCodes,
+  spreadArrays, getUrls, getLocations, parseResponse, getCountryCodes, checkIfDataIsInDb, saveDataInDb,
 };
