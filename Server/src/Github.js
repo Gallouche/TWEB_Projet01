@@ -25,8 +25,8 @@ class Github {
   }
 
   request(path, opts = {}) {
-    const url = path;
-    //const url = `${this.baseUrl}${path}`;
+    const url = `${this.baseUrl}${path}`;
+    //const url = path;
     const options = {
       ...opts,
       headers: {
@@ -41,37 +41,47 @@ class Github {
           if (!res.ok) {
             throw new ResponseError(res, data);
           }
-          return Promise.resolve(res);
+          return data;
         }));
   }
 
-  requestAllPages() {
-    const url = 'https://api.github.com/repos/openfaas/faas/contributors?per_page=20';
+  requestAllPages(path, opts = {}) {
+    const url = `${this.baseUrl}${path}?per_page=20`;
+    const options = {
+      ...opts,
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        Authorization: `token ${this.token}`,
+      },
+    };
 
-    let result = []
+    let nbPages = 0;
 
-    let fetchPage = (url) => {
-      this.request(url).then(res => {
-        let data = res.json()
-        if (!res.ok) {
-          throw new ResponseError(res, data);
-        }
-        result.concat(data);
-
-        if (!res.headers.get('link')) {
-          return null;
-        }
-        
+    return fetch(url, options)
+      .then(res => {
+        const apiPromises = [];
         let parsedLink = parse(res.headers.get('link'));
+        nbPages = parsedLink.last.page;
+        let data = [];
 
-        if(parsedLink.next) {
-          console.log(parsedLink.next.url);
-          fetchPage(parsedLink.next.url);
+        console.log(url)
+
+        data.push(res.json())
+
+        for (let i = 2; i <= nbPages; i++) {
+          let u = url + '&page=' + i;
+          console.log(u)
+          apiPromises.push(fetch(url + '&page=' + i, options));
         }
+
+        Promise.all(apiPromises)
+          .then(responses => {
+            responses.map(r => r.json()
+            .then((d) => {
+              console.log(d.length);
+            }))
+          })
       })
-    }
-    fetchPage(url)
-    return result;
   }
 
   getRepo(username, repoName) {
@@ -84,6 +94,22 @@ class Github {
 
   getRepoContributors(username, repoName) {
     return this.request(`/repos/${username}/${repoName}/contributors`);
+  }
+
+  getRepoContributorsTest(username, repoName) {
+    return this.requestAllPages(`/repos/${username}/${repoName}/contributors`);
+  }
+
+  getContributorsLocations(username, repoName) {
+    let locations = []
+
+    this.request(`/repos/${username}/${repoName}/contributors`)
+      .then(res => res.map(user => {
+        locations.push(fetch(user.url)
+          .then(r => r.json()))
+      }))
+
+    return locations
   }
 }
 

@@ -8,20 +8,28 @@ const Github = require('./src/Github');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const client = new Github({ token: process.env.OAUTH_TOKEN });
-
-client.requestAllPages();
+const client = new Github({
+  token: process.env.OAUTH_TOKEN
+});
 
 // Enable CORS for the client app
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send({ message: 'hi there' });
+  res.send({
+    message: 'hi there'
+  });
 });
 
 app.get('/user/:username', (req, res, next) => {
   client.getUser(req.params.username)
     .then(username => res.send(username))
+    .catch(next);
+});
+
+app.get('/location/:username', (req, res, next) => {
+  client.getUser(req.params.username)
+    .then(user => res.send(user.location))
     .catch(next);
 });
 
@@ -33,13 +41,28 @@ app.get('/repo/:username/:repoName', (req, res, next) => {
 
 app.get('/contrib/:username/:repoName', (req, res, next) => {
   client.getRepoContributors(req.params.username, req.params.repoName)
-    .then(contrib => res.send(contrib.map(c => c.url)))
+    .then(contrib => res.send(contrib))
+    .catch(next);
+});
+
+app.get('/test/:username/:repoName', (req, res, next) => {
+  client.getRepoContributorsTest(req.params.username, req.params.repoName)
+    .then(test => res.send(test))
+    .catch(next);
+});
+
+app.get('/locations/:username/:repoName', (req, res, next) => {
+  client.getContributorsLocations(req.params.username, req.params.repoName)
+    .then(locations => res.send(location))
     .catch(next);
 });
 
 app.get('/stargazers/:username/:repoName', (req, res, next) => {
   client.getRepoStargazers(req.params.username, req.params.repoName)
-    .then(star => res.send({ logins: star.map(c => c.login), size: star.length }))
+    .then(star => res.send({
+      logins: star.map(c => c.login),
+      size: star.length
+    }))
     .catch(next);
 });
 
