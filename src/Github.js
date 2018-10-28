@@ -79,9 +79,12 @@ class Github {
   getRepoContributorsLocations(username, repoName) {
     // check if data is already stored in database
     return utils.checkIfDataIsInDb(`${username}/${repoName}`).then((repoData) => {
-      if (repoData) {
+      if (Object.keys(repoData).length !== 0) {
+        console.log(repoData)
         return Promise.resolve(repoData)
       } else {
+        console.log('oioi')
+    
         return this.requestAllPages(`/repos/${username}/${repoName}/contributors`)
           .then(utils.spreadArrays)
           .then(utils.getUrls)

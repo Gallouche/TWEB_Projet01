@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const fs = require('fs');
 
 function spreadArrays(arrays) {
   let result = [];
