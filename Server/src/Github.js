@@ -37,7 +37,7 @@ class Github {
     
     return fetch(url, options).then(page => {
       let link = parse(page.headers.get('link'));
-      let nbPages = link.last && link.last.page || 0
+      let nbPages = link && link.last && link.last.page || 0
       let apiPromises = []
 
       apiPromises.push(Promise.resolve(utils.parseResponse(page)))
