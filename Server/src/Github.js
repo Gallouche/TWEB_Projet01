@@ -26,7 +26,7 @@ class Github {
   }
 
   requestAllPages(path, opts = {}) {
-    const url = `${this.baseUrl}${path}?per_page=20`;
+    const url = `${this.baseUrl}${path}?per_page=100`;
     const options = {
       ...opts,
       headers: {
