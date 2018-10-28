@@ -3,7 +3,6 @@ require('dotenv/config');
 const express = require('express');
 const cors = require('cors');
 const Github = require('./src/Github');
-// const utils = require('./src/utils');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -45,24 +44,10 @@ app.get('/contrib/:username/:repoName', (req, res, next) => {
     .catch(next);
 });
 
-app.get('/test/:username/:repoName', (req, res, next) => {
-  client.getRepoContributorsTest(req.params.username, req.params.repoName)
-    .then(test => res.send(test))
-    .catch(next);
-});
 
 app.get('/locations/:username/:repoName', (req, res, next) => {
-  client.getContributorsLocations(req.params.username, req.params.repoName)
-    .then(locations => res.send(location))
-    .catch(next);
-});
-
-app.get('/stargazers/:username/:repoName', (req, res, next) => {
-  client.getRepoStargazers(req.params.username, req.params.repoName)
-    .then(star => res.send({
-      logins: star.map(c => c.login),
-      size: star.length
-    }))
+  client.getRepoContributorsLocations(req.params.username, req.params.repoName)
+    .then(locations => res.send(locations))
     .catch(next);
 });
 

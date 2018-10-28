@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const parse = require('parse-link-header');
+const utils = require('./utils')
 
 
 class ResponseError extends Error {
@@ -24,27 +25,6 @@ class Github {
     this.token = token;
   }
 
-  request(path, opts = {}) {
-    const url = `${this.baseUrl}${path}`;
-    //const url = path;
-    const options = {
-      ...opts,
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-        Authorization: `token ${this.token}`,
-      },
-    };
-
-    return fetch(url, options)
-      .then(res => res.json()
-        .then((data) => {
-          if (!res.ok) {
-            throw new ResponseError(res, data);
-          }
-          return data;
-        }));
-  }
-
   requestAllPages(path, opts = {}) {
     const url = `${this.baseUrl}${path}?per_page=20`;
     const options = {
@@ -54,64 +34,57 @@ class Github {
         Authorization: `token ${this.token}`,
       },
     };
+    
+    return fetch(url, options).then(page => {
+      let link = parse(page.headers.get('link'));
+      let nbPages = link.last && link.last.page || 0
+      let apiPromises = []
 
-    let nbPages = 0;
+      apiPromises.push(Promise.resolve(this.parseResponse(page)))
 
-    return fetch(url, options)
-      .then(res => {
-        const apiPromises = [];
-        let parsedLink = parse(res.headers.get('link'));
-        nbPages = parsedLink.last.page;
-        let data = [];
+      for (let i = 2; i <= nbPages; i++) {
+        let fetchPromise = fetch(url + '&page=' + i, options).then(this.parseResponse)
+        apiPromises.push(fetchPromise);
+      }
 
-        console.log(url)
+      return Promise.all(apiPromises)
+    })
+  }
 
-        data.push(res.json())
+  requestAllLocations(contributorsUrls) {
+    const options = {
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        Authorization: `token ${this.token}`,
+      },
+    };
 
-        for (let i = 2; i <= nbPages; i++) {
-          let u = url + '&page=' + i;
-          console.log(u)
-          apiPromises.push(fetch(url + '&page=' + i, options));
-        }
+    let apiPromises = contributorsUrls.map(url => fetch(url, options).then(this.parseResponse))
+  
+    return Promise.all(apiPromises).then(utils.getLocations)
+  }
 
-        Promise.all(apiPromises)
-          .then(responses => {
-            responses.map(r => r.json()
-            .then((d) => {
-              console.log(d.length);
-            }))
-          })
-      })
+  parseResponse(res) {
+    return res.json()
   }
 
   getRepo(username, repoName) {
-    return this.request(`/repos/${username}/${repoName}`);
+    return this.requestAllPages(`/repos/${username}/${repoName}`);
   }
 
   getUser(username) {
-    return this.request(`/users/${username}`);
+    return this.requestAllPages(`/users/${username}`);
   }
 
   getRepoContributors(username, repoName) {
-    return this.request(`/repos/${username}/${repoName}/contributors`);
-  }
-
-  getRepoContributorsTest(username, repoName) {
     return this.requestAllPages(`/repos/${username}/${repoName}/contributors`);
   }
 
-  getContributorsLocations(username, repoName) {
-    let locations = []
-
-    this.request(`/repos/${username}/${repoName}/contributors`)
-      .then(res => res.map(user => {
-        locations.push(fetch(user.url)
-          .then(r => r.json()))
-      }))
-
-    return locations
+  getRepoContributorsLocations(username, repoName) {
+    return this.requestAllPages(`/repos/${username}/${repoName}/contributors`)
+      .then(utils.spreadArrays)
+      .then(utils.getUrls)
+      .then(this.requestAllLocations.bind(this))
   }
 }
-
-
 module.exports = Github;

@@ -65,8 +65,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="slider-content_wrap">
-                                    <h1>Contributors by country heatmap</h1>
-                                    <h5>Find out which country contributes most to the open source world:</h5>
+                                    <h1>Contributors heatmap</h1>
+                                    <h5>Find out which country contributes most to the open source world :</h5>
                                 </div>
                             </div>
                         </div>
@@ -134,38 +134,7 @@
     <script src="jquery-jvectormap-world-mill.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script>
-    
-        // variable clé à populer avec le nombre de contributeurs par pays
-        var contributorsCount = {
-          "AF": 12,
-          "AL": 1,
-          "DZ": 3,
-          "FR": 24,
-          "CH": 100,
-          "DE": 60,
-          "US": 40,
-          "CA": 3,
-          "RU": 95,
-          "GB": 10,
-          "CN": 20,
-        };
-        $(function(){
-          $('#world-map').vectorMap({
-            map: 'world_mill',
-            series: {
-              regions: [{
-                values: contributorsCount,
-                scale: ['#F8C13B', '#E62E25'],
-                normalizeFunction: 'linear'
-              }]
-            },
-            onRegionTipShow: function(e, el, code){
-              el.html(el.html()+' (Contributors : '+contributorsCount[code]+')');
-            }
-          });
-        });
-    </script>
+    <script src="js/getLocations.js"></script>
 
     <script>
         $(window).scroll(function() {
