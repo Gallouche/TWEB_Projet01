@@ -1,3 +1,5 @@
+// loads environment variables
+require('dotenv/config');
 const { expect } = require('chai');
 const Github = require('../src/Github');
 
@@ -10,7 +12,7 @@ describe('Test Locations return', () => {
     });
   });
   it('should return a Json', () => {
-    client.getRepoContributorsLocations('Gallouche', 'SWI_LAb4')
+    client.getRepoContributorsLocations('Gallouche', 'SWI_Lab4')
       .then((result) => {
         expect(result).to.be.instanceOf(Object);
       });

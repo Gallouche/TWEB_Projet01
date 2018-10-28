@@ -3,10 +3,11 @@ const fs = require('fs');
 
 function spreadArrays(arrays) {
   let result = [];
-
+  
   if(arrays.length === 1){
-    return Promise.resolve(arrays);
+    return Promise.resolve(arrays[0])
   }
+
   arrays.forEach((array) => {
     result = [...result, ...array];
   });
@@ -83,6 +84,14 @@ function saveDataInDb(dataInfo) {
   })
 }
 
+function isEmpty(obj) {
+  for(var key in obj) {
+      if(obj.hasOwnProperty(key))
+          return false;
+  }
+  return true;
+}
+
 module.exports = {
-  spreadArrays, getUrls, getLocations, parseResponse, getCountryCodes, checkIfDataIsInDb, saveDataInDb,
+  spreadArrays, getUrls, getLocations, parseResponse, getCountryCodes, checkIfDataIsInDb, saveDataInDb, isEmpty
 };
