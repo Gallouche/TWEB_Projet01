@@ -40,10 +40,10 @@ class Github {
       let nbPages = link.last && link.last.page || 0
       let apiPromises = []
 
-      apiPromises.push(Promise.resolve(this.parseResponse(page)))
+      apiPromises.push(Promise.resolve(utils.parseResponse(page)))
 
       for (let i = 2; i <= nbPages; i++) {
-        let fetchPromise = fetch(url + '&page=' + i, options).then(this.parseResponse)
+        let fetchPromise = fetch(url + '&page=' + i, options).then(utils.parseResponse)
         apiPromises.push(fetchPromise);
       }
 
@@ -59,13 +59,9 @@ class Github {
       },
     };
 
-    let apiPromises = contributorsUrls.map(url => fetch(url, options).then(this.parseResponse))
+    let apiPromises = contributorsUrls.map(url => fetch(url, options).then(utils.parseResponse))
   
     return Promise.all(apiPromises).then(utils.getLocations)
-  }
-
-  parseResponse(res) {
-    return res.json()
   }
 
   getRepo(username, repoName) {
@@ -85,6 +81,7 @@ class Github {
       .then(utils.spreadArrays)
       .then(utils.getUrls)
       .then(this.requestAllLocations.bind(this))
+      .then(utils.getCountryCodes)
   }
 }
 module.exports = Github;
