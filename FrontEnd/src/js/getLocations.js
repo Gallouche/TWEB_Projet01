@@ -1,7 +1,7 @@
 // variable clé à populer avec le nombre de contributeurs par pays
 var contributorsCount = {};
 
-let url = 'http://localhost:3000/locations/openfaas/faas'
+let url = 'https://twebprojet01.herokuapp.com/locations/openfaas/faas'
 
 fetch(url).then(res => res.json())
     .then(count => {

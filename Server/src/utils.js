@@ -40,8 +40,6 @@ utils.getCountryCodes = function (locations) {
 
             mapQuestResponses.forEach(mapQuestResponse => {
                 let countryCode
-                console.log(mapQuestResponse)
-
                 if (mapQuestResponse.info.statuscode == 0) {
                     countryCode = mapQuestResponse.results[0].locations[0].adminArea1
                     let countryCodeRef = countryCodes[countryCode] 
