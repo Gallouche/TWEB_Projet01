@@ -39,7 +39,7 @@ app.get('/contrib/:username/:repoName', (req, res, next) => {
 });
 
 
-app.get('/locations/:username/:repoName', cors(), (req, res, next) => {
+app.get('/locations/:username/:repoName', (req, res, next) => {
   client.getRepoContributorsLocations(req.params.username, req.params.repoName)
     .then(locations => res.send(locations))
     .catch(next);
