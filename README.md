@@ -1,8 +1,44 @@
-# Open Source Heat Map
+# Repository Heatmap
 ## Github Analytics Project - TWEB 2018
 
-Idée : Heatmap des régions les plus actives sur des gros projets (linux, kubernets, etc...) pour essayer de voir les pays les plus actif dans l'opensource.
+### Description
 
-- Propser des repo connus à visualiser, puis peut etre laisser le choix du repo
-- Stocker les principaux repo en cache sur une DB + mise à jour régulière, (faas ?)
-- Classement des pays/villes les plus engagée (grap)
+The main goal of the project is to show how many contributers work on a Github project and where they come from. This is represented on a user-friendly heatmap, with a comprehensive color palette.
+
+### Environment
+
+- Backend deployed on an [Heroku](https://www.heroku.com/) console.
+- Frontend hosted on [Github Pages](https://pages.github.com/).
+  - https://gallouche.github.io/
+- Express server running on Node.js app.
+- Heatmap created with [Jvectormap](http://jvectormap.com/)
+
+### Run
+
+### Test
+
+### Deploy
+
+### Critera/bonus
+
+| Criteria                                                     |                      Mandatory for 4.0                       |
+| ------------------------------------------------------------ | :----------------------------------------------------------: |
+| The app is online and publicly available (e.g. on GitHub Pages and Heroku) |             yes, link in environment paragraph.              |
+| It is possible to test the app locally (with live-server, or node, or any other tech) |                             yes                              |
+| Someone arriving on the app, without prior knowledge of the project, understands | yes, little description and instructions in the search field |
+| The app uses a nice visual template.                         |             yes, beautiful and modern design ;)              |
+| There is a repo with a README.md file that explains what the project is about, how to run it locally and how to build it. |                             yes                              |
+| The build process invokes a linter. The linter is happy with the quality of your code (no error). |                yes, using eslintrc, no error                 |
+| The app fetches data from GitHub and presents it in the UI.  |                        yes of course                         |
+| The app works (no crash, no obvious problem in the interactivity, etc.). |                       yes... I guess ?                       |
+
+### Bonus
+
+| Criteria                                                     |   Weight   |                      Why ?                      |
+| ------------------------------------------------------------ | :--------: | :---------------------------------------------: |
+| Extra effort has been put in the UI/UX.                      |    +0.5    | The ui look nice, smoth and have a nice loader. |
+| Extra effort has been put in the depth of the analysis (“you are not just sorting developers per commit count”). |    +0.5    |                                                 |
+| You use a database.                                          |    +0.5    |                                                 |
+| You coded a backend that is useful.                          | up to +1.0 |                                                 |
+| Extra effort has been put to make the app “sticky” and/or “viral”. There is something about it that makes it particularly original, fun. Or there is something that will make people comeback to it. | up to +1.0 |                                                 |
+| There is something else that you have done and that you think deserves a bonus. |    +0.5    |                                                 |
