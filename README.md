@@ -59,7 +59,7 @@ git push heroku master
 | There is a repo with a README.md file that explains what the project is about, how to run it locally and how to build it. |                             yes                              |
 | The build process invokes a linter. The linter is happy with the quality of your code (no error). |                yes, using eslintrc, no error                 |
 | The app fetches data from GitHub and presents it in the UI.  |                        yes of course                         |
-| The app works (no crash, no obvious problem in the interactivity, etc.). |                       yes... I guess ?                       |
+| The app works (no crash, no obvious problem in the interactivity, etc.). | yes... I guess ? Some errors are unhandle because no time...(ex: if a repo doesn't exist) |
 
 ### Bonus
 
