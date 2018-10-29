@@ -2,16 +2,6 @@ const fetch = require('node-fetch');
 const parse = require('parse-link-header');
 const utils = require('./utils');
 
-
-class ResponseError extends Error {
-  constructor(res, body) {
-    super(`${res.status} error requesting ${res.url}: ${res.statusText}`);
-    this.status = res.status;
-    this.path = res.url;
-    this.body = body;
-  }
-}
-
 class Github {
   constructor({
     token,
@@ -59,7 +49,8 @@ class Github {
       },
     };
 
-    const apiPromises = contributorsUrls.filter(url => url).map(url => fetch(url, options).then(utils.parseResponse));
+    const apiPromises = contributorsUrls.filter(url => url).map(url => fetch(url, options)
+      .then(utils.parseResponse));
 
     return Promise.all(apiPromises).then(utils.getLocations);
   }
@@ -80,21 +71,20 @@ class Github {
     // check if data is already stored in database
     return utils.checkIfDataIsInDb(`${username}/${repoName}`).then((repoData) => {
       if (!utils.isEmpty(repoData)) {
-        return Promise.resolve(repoData)
-      } else {
-        return this.requestAllPages(`/repos/${username}/${repoName}/contributors`)
-          .then(utils.spreadArrays)
-          .then(utils.getUrls)
-          .then(this.requestAllLocations.bind(this))
-          .then(utils.getCountryCodes)
-          .then((data) => {
-            return utils.saveDataInDb({
-              repo: `${username}/${repoName}`,
-              data,
-            })
-          })
+        return Promise.resolve(repoData);
       }
-    })
+      return this.requestAllPages(`/repos/${username}/${repoName}/contributors`)
+        .then(utils.spreadArrays)
+        .then(utils.getUrls)
+        .then(this.requestAllLocations.bind(this))
+        .then(utils.getCountryCodes)
+        .then((data) => {
+          return utils.saveDataInDb({
+            repo: `${username}/${repoName}`,
+            data,
+          });
+        });
+    });
   }
 }
 module.exports = Github;

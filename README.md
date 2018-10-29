@@ -1,4 +1,5 @@
 # Repository Heatmap
+
 ## Github Analytics Project - TWEB 2018
 
 ### Description
@@ -11,13 +12,40 @@ The main goal of the project is to show how many contributers work on a Github p
 - Frontend hosted on [Github Pages](https://pages.github.com/).
   - https://gallouche.github.io/
 - Express server running on Node.js app.
-- Heatmap created with [Jvectormap](http://jvectormap.com/)
+- Heatmap created with [Jvectormap](http://jvectormap.com/).
 
-### Run
+### Run locally
+
+#### Backend
+
+```bash
+git clone https://github.com/Gallouche/TWEB_Projet01.git
+cd TWEB_Projet01/
+npm install
+npm run dev
+```
+
+#### Frontend
+
+```bash
+git clone https://github.com/Gallouche/Gallouche.github.io.git
+cd Gallouche.github.io
+```
+
+And then open the `index.html` in your favorite browser.
 
 ### Test
 
-### Deploy
+```bash
+npm run test
+```
+
+### Deploy to heroku
+
+```bash
+heroku login
+git push heroku master
+```
 
 ### Critera/bonus
 
@@ -36,9 +64,9 @@ The main goal of the project is to show how many contributers work on a Github p
 
 | Criteria                                                     |   Weight   |                            Why ?                             |
 | ------------------------------------------------------------ | :--------: | :----------------------------------------------------------: |
-| Extra effort has been put in the UI/UX.                      |    +0.5    |       The ui look nice, smoth and have a nice loader.        |
+| Extra effort has been put in the UI/UX.                      |    +0.5    |       The ui look nice, smooth and have a nice loader.       |
 | Extra effort has been put in the depth of the analysis (“you are not just sorting developers per commit count”). |    +0.5    | We are getting all the contributors from a specific repo, fetching all result pages nicely (very big deal), and then getting all location from each returned users.<br />Then we use MapQuest API to get the country code of the different locations (not standardized, can be cities, coutnries... and bullshit). |
-| You use a database.                                          |    +0.5    |                                                              |
+| You use a database.                                          |    +0.5    |       Yes, kind of ! By storing data un a json file !        |
 | You coded a backend that is useful.                          | up to +1.0 | The backend is useful beacause we have diffrents API keys on it, and the main part of getting all datas is done by the bakcend, the frontend only get a Json with country codes and a counter for each. |
 | Extra effort has been put to make the app “sticky” and/or “viral”. There is something about it that makes it particularly original, fun. Or there is something that will make people comeback to it. | up to +1.0 | We think that representing datas on a interactive and friendly map is something interessting and fun :) |
 | There is something else that you have done and that you think deserves a bonus. |    +0.5    |              Because Gallouche is beautifull...              |
