@@ -3,9 +3,8 @@ const fs = require('fs');
 
 function spreadArrays(arrays) {
   let result = [];
-  
-  if(arrays.length === 1){
-    return Promise.resolve(arrays[0])
+  if (arrays.length === 1) {
+    return Promise.resolve(arrays[0]);
   }
 
   arrays.forEach((array) => {
